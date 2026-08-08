@@ -1,0 +1,14 @@
+.vercel
+.claude
+*.mp3
+*.mp4
+*.jpg
+*.png
+foto*.jpg
+g*.jpg
+hero-*.jpg
+hero-*.png
+og-image.jpg
+qr-album.png
+sobre.*
+apps-script.gs
