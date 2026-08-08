@@ -4,6 +4,8 @@
 *.mp4
 *.jpg
 *.png
+!caballero.png
+!dama.png
 foto*.jpg
 g*.jpg
 hero-*.jpg
@@ -12,3 +14,4 @@ og-image.jpg
 qr-album.png
 sobre.*
 apps-script.gs
+.env*
