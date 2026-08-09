@@ -101,8 +101,8 @@
     .genv2-title,
     .dc-note {
       background-image: linear-gradient(105deg,
-        #8A6A28 0%, #A8822F 15%, #C9A04E 28%, #E4CE8E 40%,
-        #F2E3B4 48%, #E4CE8E 56%, #C9A04E 68%, #A8822F 80%, #8A6A28 100%);
+        #B8922F 0%, #C9A04E 20%, #D4B060 40%, #E0C070 50%,
+        #D4B060 60%, #C9A04E 80%, #B8922F 100%);
       background-size: 100% 100%;
       -webkit-background-clip: text;
       background-clip: text;
@@ -128,8 +128,8 @@
     #itinerario .subtitle,
     .itin-time {
       background-image: linear-gradient(105deg,
-        #9A7830 0%, #C9A04E 18%, #E8D5A3 32%, #F5E6B8 44%,
-        #FFFBEA 50%, #F5E6B8 58%, #E8D5A3 70%, #C9A04E 84%, #9A7830 100%);
+        #C9A04E 0%, #D4B060 20%, #E0C070 40%, #E8CC80 50%,
+        #E0C070 60%, #D4B060 80%, #C9A04E 100%);
     }
 
     /* Líneas ornamentales ahora en dorado real */
@@ -442,6 +442,7 @@
       text-align: center;
       width: 100%;
       padding: 0 20px;
+      margin-top: -60px;
     }
 
     .hero-ornament-top {
@@ -3194,7 +3195,6 @@
           <path d="M100 100 C79 81 64 64 64 52 C64 43 70 36 80 36 C89 36 95 41 100 50 C105 41 111 36 120 36 C130 36 136 43 136 52 C136 64 121 81 100 100Z" stroke-width=".7"/>
         </svg>
       </div>
-      <p class="label fu">Faltan</p>
       <h2 class="title fu">El gran día</h2>
       <p class="subtitle fu">El tiempo vuela cuando esperas algo hermoso</p>
 
@@ -3219,7 +3219,6 @@
           <span class="cd-lbl">seg</span>
         </div>
       </div>
-      <p class="cd-tagline fu">hasta florecer nuestro amor</p>
     </section>
 
     <!-- ── 3. UBICACIÓN ────────────────────────────── -->
@@ -3377,10 +3376,8 @@
       <div class="corner-decor bl" style="border-color: rgba(176,116,120,0.2)"></div>
       <div class="corner-decor br" style="border-color: rgba(176,116,120,0.2)"></div>
 
-      <p class="label fu" style="text-align:center;">El programa</p>
       <h2 class="title fu" style="text-align:center;">Itinerario</h2>
       <div class="ornament-divider fu"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
-      <p class="subtitle fu" style="text-align:center;">Un día que jamás olvidarás</p>
 
       <div class="itin-wrap" id="itin">
         <div class="itin-track" aria-hidden="true">
@@ -3441,7 +3438,6 @@
         </svg>
       </div>
 
-      <p class="label fu">Código de vestimenta</p>
       <h2 class="title fu">Formal</h2>
       <div class="rose-divider fu">
         <div class="rd-line"></div>
@@ -3452,7 +3448,6 @@
         </svg>
         <div class="rd-line"></div>
       </div>
-      <p class="dc-note fu">Colores elegantes · Que brille tu mejor versión</p>
 
       <div class="dc-figures fu">
         <div class="dc-fig">
@@ -3472,12 +3467,20 @@
         <p class="dc-avoid">Por favor evitar estos colores</p>
         <div class="dc-swatches">
           <div class="dc-swatch-item">
-            <span class="dc-swatch-dot" style="background:#bfbfbf;border:1.5px solid rgba(100,100,100,.3);" aria-label="Gris"></span>
-            <span class="dc-swatch-name">Gris</span>
+            <div style="display:flex;gap:6px;justify-content:center;margin-bottom:6px;">
+              <span class="dc-swatch-dot" style="background:#d4d4d4;border:1.5px solid rgba(100,100,100,.2);width:22px;height:22px;" aria-label="Gris claro"></span>
+              <span class="dc-swatch-dot" style="background:#a3a3a3;border:1.5px solid rgba(100,100,100,.2);width:22px;height:22px;" aria-label="Gris medio"></span>
+              <span class="dc-swatch-dot" style="background:#737373;border:1.5px solid rgba(100,100,100,.2);width:22px;height:22px;" aria-label="Gris oscuro"></span>
+            </div>
+            <span class="dc-swatch-name">Tonos grises</span>
           </div>
           <div class="dc-swatch-item">
-            <span class="dc-swatch-dot" style="background:#e0adad;" aria-label="Rosa palo"></span>
-            <span class="dc-swatch-name">Rosa palo</span>
+            <div style="display:flex;gap:6px;justify-content:center;margin-bottom:6px;">
+              <span class="dc-swatch-dot" style="background:#f2c4c4;width:22px;height:22px;" aria-label="Rosa claro"></span>
+              <span class="dc-swatch-dot" style="background:#e8a0a0;width:22px;height:22px;" aria-label="Rosa medio"></span>
+              <span class="dc-swatch-dot" style="background:#d47c7c;width:22px;height:22px;" aria-label="Rosa oscuro"></span>
+            </div>
+            <span class="dc-swatch-name">Tonos rosas</span>
           </div>
         </div>
       </div>
@@ -3558,7 +3561,6 @@
         </svg>
       </div>
 
-      <p class="label fu">Tu presencia es nuestro regalo</p>
       <h2 class="title fu">Lluvia <span style="font-family:var(--script);color:var(--accent);font-size:42px;">de</span> sobres</h2>
 
       <div class="env-wrap fu">
@@ -3654,8 +3656,7 @@
               </g>
             </svg>
 
-            <p class="label fu">Confírmanos tu asistencia</p>
-            <h2 class="rsvp-title fu">Confirma tu <em>presencia</em></h2>
+            <h2 class="rsvp-title fu">Confirma tu asistencia</h2>
             <p class="rsvp-text fu">Tu presencia es el mejor regalo. Por favor confírmanos antes del <strong>15 de septiembre de 2026</strong>.</p>
 
             <p id="rsvp-name-display" style="display:none;font-family:var(--script);font-size:clamp(28px,7vw,42px);color:var(--gold-dark);line-height:1.2;margin:14px auto 4px;text-align:center;"></p>
@@ -3669,10 +3670,6 @@
               <div class="rsvp-pases-num" id="rsvp-pases-num">1</div>
             </div>
 
-            <div class="rsvp-toggle">
-              <button class="rsvp-toggle-btn" id="btnYes" type="button">¡Ahí estaré! 🎉</button>
-              <button class="rsvp-toggle-btn" id="btnNo"  type="button">No podré ir 😔</button>
-            </div>
 
             <div class="rsvp-fields" id="rsvp-fields" style="display:none"></div>
 
@@ -3708,7 +3705,6 @@
     <p class="ft-names">María Libertad</p>
     <p class="ft-date">26 · Septiembre · 2026 · Indianapolis</p>
     <div class="ft-rule"></div>
-    <p class="ft-tagline">Con amor · Familia Valdez Flores</p>
 
     <div class="footer-credit">
       <span class="credit-label">Invitación diseñada por</span>
@@ -3865,6 +3861,8 @@
     function openEnvelope() {
       if (opened) return;
       opened = true;
+
+      startMusic();
 
       // Detener pulso de la imagen
       gsap.killTweensOf(envImage);
