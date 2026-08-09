@@ -66,17 +66,18 @@
 
     /* ══════════════════════════════════════════════════════
        GOLD SHIMMER — dorado resplandeciente en títulos
+       (GPU-only: filter brightness pulse, sin background-position)
     ══════════════════════════════════════════════════════ */
-    @keyframes goldSweep {
-      0%   { background-position: 200% center }
-      100% { background-position: -200% center }
+    @keyframes goldGlow {
+      0%, 100% { filter: drop-shadow(0 0 5px rgba(201,160,78,.28)) drop-shadow(0 0 14px rgba(201,160,78,.12)); }
+      50%       { filter: drop-shadow(0 0 12px rgba(201,160,78,.72)) drop-shadow(0 0 32px rgba(201,160,78,.38)); }
     }
-    @keyframes goldSweepSlow {
-      0%   { background-position: 200% center }
-      100% { background-position: -200% center }
+    @keyframes goldGlowStr {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(201,160,78,.55)) drop-shadow(0 0 22px rgba(201,160,78,.3)) drop-shadow(0 2px 5px rgba(0,0,0,.22)); }
+      50%       { filter: drop-shadow(0 0 18px rgba(201,160,78,.95)) drop-shadow(0 0 42px rgba(201,160,78,.55)) drop-shadow(0 2px 8px rgba(0,0,0,.3)); }
     }
 
-    /* Shimmer en elementos claros (secciones con fondo crema/blanco) */
+    /* Gradiente dorado estático — sin animar posición, sin blur */
     .hero-letter,
     .label,
     .title,
@@ -99,42 +100,36 @@
     .kids-poem-sig,
     .genv2-title,
     .dc-note {
-      background-image: linear-gradient(100deg,
-        #8A6A28 0%, #A8822F 10%, #C9A04E 20%, #E4CE8E 27%, #F2E3B4 32%, #E4CE8E 37%,
-        #C9A04E 46%, #A8822F 58%, #C9A04E 70%, #E4CE8E 80%, #A8822F 90%, #8A6A28 100%);
-      background-size: 300% 100%;
+      background-image: linear-gradient(105deg,
+        #8A6A28 0%, #A8822F 15%, #C9A04E 28%, #E4CE8E 40%,
+        #F2E3B4 48%, #E4CE8E 56%, #C9A04E 68%, #A8822F 80%, #8A6A28 100%);
+      background-size: 100% 100%;
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
       color: transparent;
       text-shadow: none;
-      animation: goldSweep 12s linear infinite;
-      filter: drop-shadow(0 0 6px rgba(201,160,78,.35)) drop-shadow(0 0 18px rgba(201,160,78,.18));
+      animation: goldGlow 6s ease-in-out infinite;
     }
 
-    /* Shimmer intenso para títulos principales */
+    /* Glow intenso para títulos principales */
     .title, .hero-names, .ft-names {
-      filter:
-        drop-shadow(0 0 10px rgba(201,160,78,.6))
-        drop-shadow(0 0 28px rgba(201,160,78,.35))
-        drop-shadow(0 2px 6px rgba(0,0,0,.3));
-      animation-duration: 10s;
+      animation: goldGlowStr 5s ease-in-out infinite;
     }
 
-    /* Shimmer lento para elementos decorativos */
+    /* Glow lento para elementos decorativos */
     .subtitle, .ft-date, .ft-tagline, .cal-month, .cal-weekday, .cal-year {
-      animation-duration: 16s;
+      animation-duration: 9s;
     }
 
-    /* Shimmer en fondo oscuro (itinerario) */
+    /* Variante más brillante en fondo oscuro (itinerario) */
     #itinerario .label,
     #itinerario .title,
     #itinerario .subtitle,
     .itin-time {
-      background-image: linear-gradient(100deg,
-        #9A7830 0%, #C9A04E 10%, #E8D5A3 20%, #F5E6B8 27%, #FFFBEA 32%, #F5E6B8 37%,
-        #E8D5A3 46%, #C9A04E 58%, #E8D5A3 70%, #F5E6B8 80%, #C9A04E 90%, #9A7830 100%);
-      filter: drop-shadow(0 0 8px rgba(201,160,78,.6)) drop-shadow(0 0 22px rgba(201,160,78,.35));
+      background-image: linear-gradient(105deg,
+        #9A7830 0%, #C9A04E 18%, #E8D5A3 32%, #F5E6B8 44%,
+        #FFFBEA 50%, #F5E6B8 58%, #E8D5A3 70%, #C9A04E 84%, #9A7830 100%);
     }
 
     /* Líneas ornamentales ahora en dorado real */
@@ -388,12 +383,21 @@
       height: 100svh;
       min-height: 620px;
       padding: 0;
-      overflow: hidden;
+      overflow: visible;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       position: relative;
+    }
+
+    /* Clip sólo el fondo, no el texto */
+    .hero-bg-clip {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
     }
 
     .hero-bg {
@@ -450,25 +454,28 @@
 
     .hero-names {
       font-family: var(--script);
-      font-size: clamp(52px, 16vw, 68px);
-      line-height: 1.15;
+      font-size: clamp(38px, 10.5vw, 68px);
+      line-height: 1.2;
       color: #FDF8F6;
       text-shadow: 0 2px 24px rgba(42,10,30,.3), 0 0 60px rgba(176,116,120,0.15);
       white-space: normal;
       text-align: center;
-      padding: 0 16px;
+      padding: 0 40px 0 20px;
+      width: 100%;
+      box-sizing: border-box;
     }
     .hero-line {
       display: block;
-      white-space: nowrap;
+      white-space: normal;
+      overflow: visible;
     }
     .hero-letter {
-      display: inline-block;
+      display: inline;
       opacity: 0;
-      will-change: transform, opacity, filter;
+      will-change: transform, opacity;
       transform-origin: 50% 100%;
     }
-    .hero-letter.is-space { width: .25em; }
+    .hero-letter.is-space { display: inline-block; width: .25em; }
 
     /* Corazón pulsante que aparece entre los nombres */
     .hero-heart {
@@ -723,8 +730,8 @@
       padding: 28px 24px 28px 28px;
       margin-bottom: 24px;
       backdrop-filter: blur(16px);
-      opacity: 0;
-      transform: translateY(40px) scale(0.95);
+      opacity: 1;
+      transform: none;
       overflow: hidden;
     }
 
@@ -1717,18 +1724,8 @@
     /* ══════════════════════════════════════════════════════
        RSVP V2 — título RSVP + botón estético
     ══════════════════════════════════════════════════════ */
-    .rsvp-title {
-      font-family: var(--display);
-      font-weight: 400;
-      letter-spacing: 12px;
-      font-size: clamp(42px, 12vw, 56px);
-      color: var(--text);
-      background: linear-gradient(180deg, var(--accent) 0%, var(--gold-dark) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      padding-left: 12px;
-    }
+    /* legacy rsvp-title overridden by .rsvp-card .rsvp-title below */
+    .rsvp-title-legacy { display: none; }
     .rsvp-title-script {
       font-family: var(--script);
       font-size: .7em;
@@ -2940,9 +2937,9 @@
     #itinerario { padding: min(14vh,130px) 0; }
     .itin-wrap { position:relative;max-width:480px;margin:40px auto 0;padding:16px clamp(16px,4vw,36px); }
     .itin-track { position:absolute;left:50%;top:0;bottom:0;width:0;overflow:visible;z-index:1;pointer-events:none; }
-    .itin-track-glow { position:absolute;left:-28px;width:56px;top:0;height:100%;transform:scaleY(0);transform-origin:top center;background:linear-gradient(to bottom,transparent 0%,rgba(201,160,78,.15) 8%,rgba(201,160,78,.26) 40%,rgba(201,160,78,.26) 60%,rgba(201,160,78,.15) 92%,transparent 100%);filter:blur(22px);opacity:.92;will-change:transform;pointer-events:none; }
-    .itin-track-mid { position:absolute;left:-5px;width:10px;top:0;height:100%;transform:scaleY(0);transform-origin:top center;background:linear-gradient(to bottom,transparent 0%,rgba(212,200,158,.5) 8%,rgba(212,200,158,.7) 40%,rgba(212,200,158,.7) 60%,rgba(212,200,158,.5) 92%,transparent 100%);filter:blur(5px);opacity:.92;will-change:transform;pointer-events:none; }
-    .itin-track-fill { position:absolute;left:-.75px;width:1.5px;top:0;height:100%;transform:scaleY(0);transform-origin:top center;background:linear-gradient(to bottom,transparent 0%,#e8dbb8 5%,#fff5d8 28%,#fffef4 50%,#fff5d8 72%,#e8dbb8 95%,transparent 100%);border-radius:1px;will-change:transform;pointer-events:none; }
+    .itin-track-glow { position:absolute;left:-28px;width:56px;top:0;height:0;background:linear-gradient(to bottom,transparent 0%,rgba(201,160,78,.15) 8%,rgba(201,160,78,.26) 40%,rgba(201,160,78,.26) 60%,rgba(201,160,78,.15) 92%,transparent 100%);filter:blur(22px);opacity:.92;will-change:height;pointer-events:none; }
+    .itin-track-mid { position:absolute;left:-5px;width:10px;top:0;height:0;background:linear-gradient(to bottom,transparent 0%,rgba(212,200,158,.5) 8%,rgba(212,200,158,.7) 40%,rgba(212,200,158,.7) 60%,rgba(212,200,158,.5) 92%,transparent 100%);filter:blur(5px);opacity:.92;will-change:height;pointer-events:none; }
+    .itin-track-fill { position:absolute;left:-.75px;width:1.5px;top:0;height:0;background:linear-gradient(to bottom,transparent 0%,#e8dbb8 5%,#fff5d8 28%,#fffef4 50%,#fff5d8 72%,#e8dbb8 95%,transparent 100%);border-radius:1px;will-change:height;pointer-events:none; }
     .itin-track-shimmer { position:absolute;left:-10px;width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 38% 36%,#fff 0%,#fff8e0 38%,rgba(212,200,158,.1) 100%);box-shadow:0 0 10px 4px rgba(255,250,210,.95),0 0 22px 8px rgba(201,160,78,.55),0 0 42px 14px rgba(201,160,78,.18);opacity:0;pointer-events:none;will-change:top,opacity; }
     .itin-events { list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:clamp(48px,8vh,90px);position:relative;z-index:2; }
     .itin-event { position:relative;display:flex;flex-direction:column;align-items:center; }
@@ -2950,9 +2947,9 @@
     .itin-event.is-active .itin-marker { opacity:1;background:radial-gradient(circle at 34% 30%,#fffef0 0%,#d4c89e 52%,#8a7a50 100%);border-color:rgba(201,160,78,.88);box-shadow:0 0 6px 2px rgba(212,200,158,.88),0 0 16px 6px rgba(201,160,78,.44),0 0 32px 10px rgba(201,160,78,.16); }
     .itin-event.is-active .itin-marker::before { content:"";position:absolute;inset:-7px;border-radius:50%;border:1px solid rgba(201,160,78,.28);animation:itin-halo 2.4s ease-in-out infinite; }
     @keyframes itin-halo { 0%,100%{opacity:.28;transform:scale(1)}50%{opacity:.58;transform:scale(1.05)} }
-    .itin-card { padding:22px 32px 26px;background:rgba(255,248,248,.12);border:1px solid rgba(201,160,78,.22);border-radius:2px;text-align:center;width:100%;max-width:380px;position:relative;transition:border-color .5s,background .5s,box-shadow .5s; }
-    .itin-card::before,.itin-card::after { content:"";position:absolute;left:50%;transform:translateX(-50%);height:1px;background:linear-gradient(to right,transparent,rgba(201,160,78,.5),transparent); }
-    .itin-card::before{top:10px;width:52%} .itin-card::after{bottom:10px;width:52%}
+    .itin-card { display:flex !important;flex-direction:column !important;align-items:center !important;padding:28px 28px 30px;background:rgba(255,248,248,.10);border:1px solid rgba(201,160,78,.28);border-radius:4px;text-align:center !important;width:100%;max-width:360px;position:relative;transition:border-color .5s,background .5s,box-shadow .5s;opacity:1 !important;transform:none !important;overflow:hidden;grid-template-columns:unset !important; }
+    .itin-card::before { content:"";position:absolute;top:0;left:10%;width:80%;height:1px;background:linear-gradient(to right,transparent,rgba(201,160,78,.55),transparent);pointer-events:none; }
+    .itin-card::after  { content:"";position:absolute;bottom:0;left:10%;width:80%;height:1px;background:linear-gradient(to right,transparent,rgba(201,160,78,.35),transparent);pointer-events:none; }
     .itin-event.is-active .itin-card { border-color:rgba(201,160,78,.5);background:rgba(255,248,248,.18);box-shadow:0 18px 52px -22px rgba(42,10,30,.25); }
     .itin-time { font-family:var(--script);font-size:clamp(28px,5vw,40px);color:rgba(240,220,200,.7);letter-spacing:.02em;margin-bottom:6px; }
     .itin-event.is-active .itin-time { color:var(--gold); }
@@ -3130,9 +3127,12 @@
 
     <!-- ── 1. HERO ─────────────────────────────────── -->
     <section id="hero" aria-label="Portada">
-      <img class="hero-bg" id="hero-bg" src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/a88e9ee5-0091-48c4-bd3b-342aee0cbf73/1786199465296-5.jpg" alt="" aria-hidden="true">
-      <div class="hero-overlay" aria-hidden="true"></div>
-      <div class="hero-vignette" aria-hidden="true"></div>
+      <!-- fondo en su propio clip-container para no cortar el texto -->
+      <div class="hero-bg-clip" aria-hidden="true">
+        <img class="hero-bg" id="hero-bg" src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/a88e9ee5-0091-48c4-bd3b-342aee0cbf73/1786199465296-5.jpg" alt="">
+        <div class="hero-overlay"></div>
+        <div class="hero-vignette"></div>
+      </div>
 
       <div class="hero-content">
         <div class="hero-ornament-top" id="hero-orn-top" aria-hidden="true"></div>
@@ -3146,7 +3146,7 @@
           <span class="hero-line" data-name="Libertad"></span>
         </h1>
         <div class="hero-ornament-bottom" id="hero-orn-bottom" aria-hidden="true"></div>
-        <p class="hero-date"  id="hero-date">26 · Septiembre · MMXXVI</p>
+        <p class="hero-date"  id="hero-date">26 · Septiembre · 2026</p>
         <p class="hero-city"  id="hero-city">Indianapolis, Indiana</p>
 
         <!-- Tarjeta personalizada por invitado — visible solo si viene ?para= en la URL -->
@@ -3345,7 +3345,7 @@
           <span class="cal-month">Septiembre · 2026</span>
           <span class="cal-day">26</span>
           <span class="cal-weekday">Sábado</span>
-          <span class="cal-year">MMXXVI · Indianapolis</span>
+          <span class="cal-year">2026 · Indianapolis</span>
         </div>
 
         <a
@@ -3394,7 +3394,7 @@
             <span class="itin-marker" aria-hidden="true"></span>
             <div class="itin-card">
               <div class="itin-time">10:30 AM</div>
-              <div class="itin-name">Misa de XV Años</div>
+              <div class="itin-name">St. Monica Catholic Church</div>
               <div class="itin-desc">María Libertad da gracias a Dios por estos quince años de vida</div>
             </div>
           </li>
@@ -3402,8 +3402,8 @@
             <span class="itin-marker" aria-hidden="true"></span>
             <div class="itin-card">
               <div class="itin-time">5:00 PM</div>
-              <div class="itin-name">Recepción</div>
-              <div class="itin-desc">Celebración y alegría con los seres más queridos en el salón de fiestas</div>
+              <div class="itin-name">Star Events</div>
+              <div class="itin-desc">Celebración y alegría con los seres más queridos</div>
             </div>
           </li>
           <li class="itin-event">
@@ -3706,7 +3706,7 @@
       </svg>
     </div>
     <p class="ft-names">María Libertad</p>
-    <p class="ft-date">26 · Septiembre · MMXXVI · Indianapolis</p>
+    <p class="ft-date">26 · Septiembre · 2026 · Indianapolis</p>
     <div class="ft-rule"></div>
     <p class="ft-tagline">Con amor · Familia Valdez Flores</p>
 
@@ -3919,32 +3919,45 @@
     splitHeroNames();
     var letters = document.querySelectorAll('#hero-names .hero-letter');
 
-    var tl = gsap.timeline();
+    var tl = gsap.timeline({
+      onComplete: function () {
+        // Cambiar a color sólido para que la 'd' y demás swashes
+        // de Great Vibes no queden recortados por background-clip:text
+        letters.forEach(function (l) {
+          l.style.backgroundImage = 'none';
+          l.style.backgroundClip = 'border-box';
+          l.style.webkitBackgroundClip = 'border-box';
+          l.style.webkitTextFillColor = '#C9A04E';
+          l.style.color = '#C9A04E';
+          l.style.animation = 'none';
+          l.style.filter = '';
+          gsap.set(l, { clearProps: 'transform,rotation,scale,y' });
+        });
+      }
+    });
 
-    // 1. Corazón aparece primero
+    // 1. Ornamento superior
+    tl.to('#hero-orn-top', { opacity: 1, width: 120, duration: 0.8, ease: 'power2.out' }, 0.2);
+
+    // 2. Corazón y nombres juntos
     tl.fromTo('#hero-heart',
       { opacity: 0, scale: 0.2, rotation: -20 },
-      { opacity: 1, scale: 1, rotation: 0, duration: 1.1, ease: 'back.out(2.2)' },
-      0
+      { opacity: 1, scale: 1, rotation: 0, duration: 1.0, ease: 'back.out(2.2)' },
+      0.6
     );
-
-    // 2. Esperar 3 segundos, luego aparece el ornamento
-    tl.to('#hero-orn-top', { opacity: 1, width: 120, duration: 0.8, ease: 'power2.out' }, 3.0);
-
-    // 3. Letras caen como pétalos
     tl.fromTo(letters,
-      { opacity: 0, y: -34, rotation: -12, scale: 0.6, filter: 'blur(14px)' },
+      { opacity: 0, y: -28, rotation: -8, scale: 0.7 },
       {
-        opacity: 1, y: 0, rotation: 0, scale: 1, filter: 'blur(0px)',
-        duration: 1.1,
-        ease: 'back.out(1.35)',
-        stagger: { each: 0.07, from: 'start' }
+        opacity: 1, y: 0, rotation: 0, scale: 1,
+        duration: 1.0,
+        ease: 'back.out(1.3)',
+        stagger: { each: 0.06, from: 'start' }
       },
-      '-=0.3'
+      0.6
     );
 
-    // 4. Resto: fecha, ciudad, scroll
-    tl.to('#hero-orn-bottom', { opacity: 1, width: 80, duration: 0.6, ease: 'power2.out' }, '-=0.4')
+    // 3. Resto: fecha, ciudad, scroll
+    tl.to('#hero-orn-bottom', { opacity: 1, width: 80, duration: 0.6, ease: 'power2.out' }, '-=0.3')
       .to('#hero-date',  { opacity: 1, y: 0, duration: .8, ease: 'power2.out' }, '-=0.3')
       .to('#hero-city',  { opacity: 1, y: 0, duration: .6, ease: 'power2.out' }, '-=0.5')
       .to('#hero-scroll',{ opacity: 1, duration: .5, ease: 'power2.out' }, '-=0.3');
