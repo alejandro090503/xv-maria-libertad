@@ -3235,7 +3235,6 @@
           <path d="M100 100 C79 81 64 64 64 52 C64 43 70 36 80 36 C89 36 95 41 100 50 C105 41 111 36 120 36 C130 36 136 43 136 52 C136 64 121 81 100 100Z" stroke-width=".6"/>
         </svg>
       </div>
-      <p class="label fu">Nos encontramos aquí</p>
       <h2 class="title fu">Dónde celebraremos</h2>
       <p class="subtitle fu">Te esperamos con los brazos abiertos</p>
 
@@ -3449,17 +3448,17 @@
         <div class="rd-line"></div>
       </div>
 
-      <div class="dc-figures fu">
-        <div class="dc-fig">
-          <img src="caballero.png" alt="Caballero, traje formal" loading="lazy" />
-          <span class="dc-fig-label">Caballeros</span>
-          <span class="dc-fig-sub">traje formal</span>
-        </div>
-        <div class="dc-sep-line" aria-hidden="true"></div>
-        <div class="dc-fig">
-          <img src="dama.png" alt="Dama, vestido formal" loading="lazy" />
-          <span class="dc-fig-label">Damas</span>
-          <span class="dc-fig-sub">vestido de gala</span>
+      <div class="dc-figures fu" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/xv-maria-libertad/dresscode-siluetas.jpg" alt="Siluetas código de vestimenta — Damas y Caballeros" loading="lazy" style="width:90%;max-width:400px;border-radius:12px;" />
+        <div style="display:flex;justify-content:space-around;width:90%;max-width:400px;">
+          <div style="text-align:center;">
+            <span class="dc-fig-label">Damas</span>
+            <span class="dc-fig-sub">vestido de gala</span>
+          </div>
+          <div style="text-align:center;">
+            <span class="dc-fig-label">Caballeros</span>
+            <span class="dc-fig-sub">traje formal</span>
+          </div>
         </div>
       </div>
 
@@ -3736,7 +3735,18 @@
     bgAudio.play().then(function () {
       _on = true;
       musicBtn.classList.add('playing');
-    }).catch(function () {});
+    }).catch(function () {
+      var unlock = function () {
+        bgAudio.play().then(function () {
+          _on = true;
+          musicBtn.classList.add('playing');
+          document.removeEventListener('touchstart', unlock);
+          document.removeEventListener('click', unlock);
+        }).catch(function () {});
+      };
+      document.addEventListener('touchstart', unlock, { once: true });
+      document.addEventListener('click', unlock, { once: true });
+    });
   }
 
   musicBtn.addEventListener('click', function () {
