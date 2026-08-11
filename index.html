@@ -1359,8 +1359,12 @@
         linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
       -webkit-mask-composite: destination-in;
     }
-    #versiculo > *, #cuenta > *, #ubicacion > *,
-    #dresscode > *:not(.heart-nest), #rsvp > *, #galeria > * {
+    #versiculo > *:not(.heart-nest),
+    #cuenta > *:not(.heart-nest),
+    #ubicacion > *:not(.heart-nest),
+    #dresscode > *:not(.heart-nest),
+    #rsvp > *:not(.heart-nest),
+    #galeria > *:not(.heart-nest) {
       position: relative;
       z-index: 1;
     }
