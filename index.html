@@ -1335,6 +1335,66 @@
     #cuenta, #familia { background: rgba(245,228,224,.82); }
     #kids-policy, #album, #rsvp { background: linear-gradient(180deg, rgba(245,228,224,.82) 0%, rgba(250,240,238,.82) 100%); }
 
+    /* ── FONDOS DECORATIVOS con fade (mask-composite) ──── */
+    #versiculo, #cuenta, #ubicacion, #dresscode, #rsvp, #galeria {
+      position: relative;
+      overflow: hidden;
+    }
+    #versiculo::before, #cuenta::before, #ubicacion::before,
+    #dresscode::before, #rsvp::before, #galeria::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 0;
+      mask-image:
+        linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+      mask-composite: intersect;
+      -webkit-mask-image:
+        linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%),
+        linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+      -webkit-mask-composite: destination-in;
+    }
+    #versiculo > *, #cuenta > *, #ubicacion > *,
+    #dresscode > *:not(.heart-nest), #rsvp > *, #galeria > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    #versiculo::before {
+      background-image: url('https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/xv-maria-libertad/bg-corona-rosas.jpg');
+      opacity: .38;
+    }
+    #cuenta::before {
+      background-image: url('https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/xv-maria-libertad/bg-pink-gold-dust.jpg');
+      opacity: .30;
+    }
+    #ubicacion::before {
+      background-image: url('https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/xv-maria-libertad/bg-pink-gold-edges.jpg');
+      opacity: .28;
+    }
+    #dresscode::before {
+      background-image: url('https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/xv-maria-libertad/bg-pink-gold-corners.jpg');
+      opacity: .32;
+    }
+    #rsvp::before {
+      background-image: url('https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/xv-maria-libertad/bg-pink-marble.jpg');
+      opacity: .25;
+    }
+    #galeria::before {
+      background-image: url('https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/xv-maria-libertad/bg-pink-soft.jpg');
+      opacity: .22;
+    }
+
+    /* Siluetas dresscode — quitar fondo con blend */
+    .dc-figures img {
+      mix-blend-mode: multiply;
+    }
+
     /* ══════════════════════════════════════════════════════
        COUNTDOWN — rediseño elegante con tema de rosas
     ══════════════════════════════════════════════════════ */
