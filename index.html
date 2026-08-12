@@ -3169,20 +3169,22 @@
       filter: drop-shadow(0 6px 14px rgba(42,10,30,.22));
     }
     .dc-fig-label {
+      display:block;
       font-family: var(--script);
-      font-size: 20px;
-      font-style: italic;
+      font-size: 22px;
       letter-spacing: 1px;
       color: var(--accent);
+      margin-bottom:2px;
     }
     .dc-fig-sub {
-      font-family: var(--sans);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: rgba(42,10,30,.55);
-      margin-top: -6px;
+      display:block;
+      font-family: var(--serif);
+      font-size: 12px;
+      font-weight: 400;
+      font-style:italic;
+      letter-spacing: 2px;
+      text-transform: lowercase;
+      color: rgba(42,10,30,.5);
     }
     .dc-sep-line {
       width: 1px;
@@ -3643,12 +3645,12 @@
         <img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/xv-maria-libertad/dresscode-siluetas.png" alt="Siluetas código de vestimenta — Damas y Caballeros" loading="lazy" style="width:90%;max-width:400px;border-radius:12px;" />
         <div style="display:flex;justify-content:space-around;width:90%;max-width:400px;">
           <div style="text-align:center;">
-            <span class="dc-fig-label">Damas</span>
-            <span class="dc-fig-sub">vestido de gala</span>
+            <span class="dc-fig-label" id="dc-label-damas">Damas</span>
+            <span class="dc-fig-sub" id="dc-sub-damas">vestido de gala</span>
           </div>
           <div style="text-align:center;">
-            <span class="dc-fig-label">Caballeros</span>
-            <span class="dc-fig-sub">traje formal</span>
+            <span class="dc-fig-label" id="dc-label-cab">Caballeros</span>
+            <span class="dc-fig-sub" id="dc-sub-cab">traje formal</span>
           </div>
         </div>
       </div>
@@ -4827,10 +4829,10 @@
       '.itin-event:nth-child(3) .itin-name': 'End of event',
       '.itin-event:nth-child(3) .itin-desc': 'A magical night comes to an end',
       '#dresscode .title': 'Formal',
-      '.dc-fig-label:first-of-type': 'Ladies',
-      '.dc-fig-sub:first-of-type': 'formal gown',
-      '.dc-fig-label:last-of-type': 'Gentlemen',
-      '.dc-fig-sub:last-of-type': 'formal suit',
+      '#dc-label-damas': 'Ladies',
+      '#dc-sub-damas': 'formal gown',
+      '#dc-label-cab': 'Gentlemen',
+      '#dc-sub-cab': 'formal suit',
       '.dc-avoid': 'Please avoid these colors',
       '.dc-swatch-name': ['Gray tones','Pink tones'],
       '#galeria .label': 'Her moments',
