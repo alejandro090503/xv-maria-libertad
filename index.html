@@ -1191,6 +1191,15 @@
     .rsvp-btn:hover { transform:translateY(-2px);box-shadow:0 12px 32px rgba(201,160,78,.35); }
     .rsvp-deadline { display:inline-flex;align-items:center;gap:8px;margin-top:20px;font-family:var(--sans);font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold-dark);padding-left:.4em;font-weight:600; }
     #rsvp-feedback { font-family:var(--serif);font-style:italic;font-size:17px;text-align:center;margin:12px auto 0;max-width:380px;display:none;line-height:1.6; }
+    .rsvp-asignados { display:flex;flex-direction:column;gap:12px;max-width:400px;margin:0 auto 16px; }
+    .rsvp-person-card { display:flex;flex-direction:column;gap:10px;padding:14px 16px;background:rgba(255,255,255,.7);border:1.5px solid rgba(201,160,78,.28);transition:border-color .25s,background .25s; }
+    .rsvp-person-card[data-choice="yes"] { border-color:#4a7848;background:rgba(80,140,80,.08); }
+    .rsvp-person-card[data-choice="no"]  { border-color:var(--gold-dark);background:rgba(201,160,78,.1); }
+    .rsvp-person-name { font-family:var(--serif);font-size:20px;font-weight:600;color:var(--text);text-align:center; }
+    .rsvp-person-toggle { display:grid;grid-template-columns:1fr 1fr;gap:8px; }
+    .rsvp-mini-btn { padding:11px 12px;border:1.5px solid rgba(201,160,78,.3);background:rgba(255,255,255,.7);font-family:var(--serif);font-style:italic;font-size:15px;color:var(--text);cursor:pointer;transition:all .25s;min-height:46px;-webkit-tap-highlight-color:transparent; }
+    .rsvp-mini-btn.rsvp-mini-yes-on { background:rgba(80,140,80,.12);border-color:#4a7848;color:#2a5028; }
+    .rsvp-mini-btn.rsvp-mini-no-on { background:rgba(201,160,78,.14);border-color:var(--gold-dark);color:var(--gold-dark); }
 
     /* ── FOOTER ──────────────────────────────────────── */
     footer {
@@ -3116,7 +3125,7 @@
     .itin-time {
       font-family:var(--script);
       font-size:clamp(26px,5vw,36px);
-      color:#7a3040;
+      color:#b5274f;
       letter-spacing:.02em;
       margin-bottom:2px;
       text-shadow:0 0 8px rgba(255,255,255,.6);
@@ -3714,7 +3723,7 @@
       </div>
 
       <p class="label fu">Aviso especial</p>
-      <h2 class="title fu" style="-webkit-text-fill-color:transparent;">Atención <span style="font-family:var(--script);font-size:44px;background-image:linear-gradient(100deg,#8A6A28 0%,#C9A04E 32%,#E4CE8E 50%,#C9A04E 68%,#8A6A28 100%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;animation:goldSweep 4s linear infinite;">Padres</span></h2>
+      <h2 class="title fu" style="background-image:linear-gradient(100deg,#8A6A28 0%,#C9A04E 32%,#E4CE8E 50%,#C9A04E 68%,#8A6A28 100%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:goldSweep 4s linear infinite;">Atención <span style="font-family:var(--script);font-size:44px;">Padres</span></h2>
       <div class="rose-divider fu">
         <div class="rd-line"></div>
         <svg class="rd-rose" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
@@ -3843,8 +3852,14 @@
               <div class="rsvp-pases-num" id="rsvp-pases-num">1</div>
             </div>
 
+            <div class="rsvp-toggle" id="rsvp-toggle-std">
+              <button class="rsvp-toggle-btn" id="btnYes" type="button">Asistiré</button>
+              <button class="rsvp-toggle-btn" id="btnNo" type="button">No podré asistir</button>
+            </div>
 
             <div class="rsvp-fields" id="rsvp-fields" style="display:none"></div>
+
+            <div class="rsvp-asignados" id="rsvp-asignados" style="display:none"></div>
 
             <button class="rsvp-btn" id="rsvp-confirm-btn" type="button">
               <span id="rsvp-btn-text">Confirmar asistencia</span>
@@ -4659,8 +4674,9 @@
   /* ── RSVP + Panel Invitados ── */
   (function () {
     var PANEL_URL = 'https://panel-invitados.vercel.app/api/confirmar';
-    var SLUG      = 'xv-maria-libertad';
-    var BODA_URL  = 'https://xv-maria-libertad.vercel.app/';
+    var RSVP_URL  = 'https://xv-maria-libertad.vercel.app';
+    var DEADLINE  = new Date(2026, 8, 10, 23, 59, 59, 999);
+    var frozen    = Date.now() > DEADLINE.getTime();
 
     var params   = new URLSearchParams(window.location.search);
     var urlPara  = (params.get('para')  || '').trim();
@@ -4678,7 +4694,7 @@
     }
 
     /* — Nombre en RSVP — */
-    var nameEl    = document.getElementById('rsvp-name-display');
+    var nameEl     = document.getElementById('rsvp-name-display');
     var pasesNumEl = document.getElementById('rsvp-pases-num');
     if (nameEl && urlPara) { nameEl.textContent = urlPara; nameEl.style.display = ''; }
     if (pasesNumEl) pasesNumEl.textContent = urlPases;
@@ -4690,6 +4706,42 @@
     var confirmBtn = document.getElementById('rsvp-confirm-btn');
     var btnText    = document.getElementById('rsvp-btn-text');
     var feedbackEl = document.getElementById('rsvp-feedback');
+    var toggleEl   = document.getElementById('rsvp-toggle-std');
+    var pasesDispEl = document.getElementById('rsvp-pases-display');
+    var asigEl     = document.getElementById('rsvp-asignados');
+    var nombresAsignados = [];
+    var asignadosChoices = {};
+
+    function renderAsignados() {
+      if (!asigEl) return;
+      asigEl.innerHTML = '';
+      nombresAsignados.forEach(function(nm, idx){
+        var pc = document.createElement('div');
+        pc.className = 'rsvp-person-card';
+        var choice = asignadosChoices[idx];
+        if (choice) pc.setAttribute('data-choice', choice);
+        var name = document.createElement('div');
+        name.className = 'rsvp-person-name';
+        name.textContent = nm;
+        var tog = document.createElement('div');
+        tog.className = 'rsvp-person-toggle';
+        var bY = document.createElement('button');
+        bY.type = 'button';
+        bY.className = 'rsvp-mini-btn' + (choice === 'yes' ? ' rsvp-mini-yes-on' : '');
+        bY.textContent = 'Asistiré';
+        bY.disabled = frozen;
+        bY.addEventListener('click', function(){ if(frozen) return; asignadosChoices[idx] = 'yes'; renderAsignados(); });
+        var bN = document.createElement('button');
+        bN.type = 'button';
+        bN.className = 'rsvp-mini-btn' + (choice === 'no' ? ' rsvp-mini-no-on' : '');
+        bN.textContent = 'No asistiré';
+        bN.disabled = frozen;
+        bN.addEventListener('click', function(){ if(frozen) return; asignadosChoices[idx] = 'no'; renderAsignados(); });
+        tog.appendChild(bY); tog.appendChild(bN);
+        pc.appendChild(name); pc.appendChild(tog);
+        asigEl.appendChild(pc);
+      });
+    }
 
     function renderFields(count) {
       if (!fieldsEl) return;
@@ -4698,7 +4750,7 @@
         var inp = document.createElement('input');
         inp.className    = 'rsvp-input';
         inp.type         = 'text';
-        inp.placeholder  = 'Nombre del invitado ' + (i + 1);
+        inp.placeholder  = 'Escribe tu nombre completo';
         inp.autocomplete = 'off';
         fieldsEl.appendChild(inp);
       }
@@ -4725,20 +4777,84 @@
       }
     }
 
+    /* — GET: precargar estado / nombres asignados — */
+    if (urlPara) {
+      fetch(PANEL_URL + '?nombre=' + encodeURIComponent(urlPara) + '&url_boda=' + encodeURIComponent(RSVP_URL))
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          if (!d.ok || !d.invitado) return;
+          var inv = d.invitado;
+          var asignados = Array.isArray(inv.nombres_asignados) ? inv.nombres_asignados.filter(function(x){ return x && x.trim(); }) : [];
+          if (asignados.length > 0) {
+            nombresAsignados = asignados;
+            if (toggleEl)    toggleEl.style.display = 'none';
+            if (fieldsEl)    fieldsEl.style.display = 'none';
+            if (pasesDispEl) pasesDispEl.style.display = 'none';
+            if (asigEl)      asigEl.style.display = 'flex';
+            if (inv.estado === 'confirmado' || inv.estado === 'declino') {
+              var confLower = (inv.nombres_confirmados || []).map(function(s){ return String(s).toLowerCase().trim(); });
+              nombresAsignados.forEach(function(nm, idx){
+                asignadosChoices[idx] = (inv.estado === 'declino') ? 'no' : (confLower.indexOf(nm.toLowerCase().trim()) >= 0 ? 'yes' : 'no');
+              });
+              if (btnText) btnText.textContent = 'Actualizar respuesta';
+            }
+            renderAsignados();
+            return;
+          }
+          if (inv.estado === 'confirmado') {
+            selectRsvp('yes');
+            if (btnText) btnText.textContent = 'Actualizar respuesta';
+            var prev = inv.nombres_confirmados || [];
+            if (prev.length > 0 && fieldsEl) {
+              var inputs = fieldsEl.querySelectorAll('input');
+              prev.forEach(function(n, i){ if (inputs[i]) inputs[i].value = n; });
+            }
+          } else if (inv.estado === 'declino') {
+            selectRsvp('no');
+            if (btnText) btnText.textContent = 'Actualizar respuesta';
+          }
+        }).catch(function(){});
+    }
+
+    if (frozen) {
+      if (btnYes)     btnYes.disabled = true;
+      if (btnNo)      btnNo.disabled = true;
+      if (confirmBtn) confirmBtn.disabled = true;
+      if (btnText)    btnText.textContent = 'Plazo vencido';
+      return;
+    }
+
     if (btnYes) btnYes.addEventListener('click', function(){ selectRsvp('yes'); });
     if (btnNo)  btnNo.addEventListener('click',  function(){ selectRsvp('no'); });
 
     if (confirmBtn) {
       confirmBtn.addEventListener('click', function(){
-        if (!rsvpChoice) {
-          if (feedbackEl) { feedbackEl.textContent = 'Por favor selecciona si asistirás o no.'; feedbackEl.style.display = ''; feedbackEl.style.color = 'var(--gold-dark)'; }
+        var modoAsignados = nombresAsignados.length > 0;
+        var nombres = [];
+        var estadoFinal;
+        if (modoAsignados) {
+          var faltan = nombresAsignados.filter(function(_, i){ return !asignadosChoices[i]; });
+          if (faltan.length > 0) {
+            if (feedbackEl) { feedbackEl.textContent = 'Por favor responde por cada invitado (' + faltan.length + ' pendiente' + (faltan.length === 1 ? '' : 's') + ').'; feedbackEl.style.display = ''; feedbackEl.style.color = 'var(--gold-dark)'; }
+            return;
+          }
+          nombres = nombresAsignados.filter(function(_, i){ return asignadosChoices[i] === 'yes'; });
+          estadoFinal = nombres.length > 0 ? 'confirmado' : 'declino';
+        } else {
+          if (!rsvpChoice) {
+            if (feedbackEl) { feedbackEl.textContent = 'Por favor selecciona si asistirás o no.'; feedbackEl.style.display = ''; feedbackEl.style.color = 'var(--gold-dark)'; }
+            return;
+          }
+          if (rsvpChoice === 'yes' && fieldsEl) {
+            nombres = Array.from(fieldsEl.querySelectorAll('input')).map(function(i){ return i.value.trim(); }).filter(function(n){ return n.length > 0; });
+          }
+          estadoFinal = rsvpChoice === 'yes' ? 'confirmado' : 'declino';
+        }
+        var nombre = urlPara || (nombres[0] || '');
+        if (!nombre) {
+          if (feedbackEl) { feedbackEl.textContent = 'Por favor ingresa tu nombre.'; feedbackEl.style.display = ''; feedbackEl.style.color = 'var(--gold-dark)'; }
           return;
         }
-        var nombres = [];
-        if (rsvpChoice === 'yes' && fieldsEl) {
-          nombres = Array.from(fieldsEl.querySelectorAll('input')).map(function(i){ return i.value.trim(); }).filter(function(n){ return n.length > 0; });
-        }
-        var nombre = urlPara || (nombres[0] || 'Invitado');
         confirmBtn.disabled = true;
         if (btnText) btnText.textContent = 'Enviando…';
 
@@ -4746,22 +4862,33 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            slug:     SLUG,
             nombre:   nombre,
-            pases:    rsvpChoice === 'yes' ? urlPases : 0,
-            url_boda: BODA_URL
+            url_boda: RSVP_URL,
+            estado:   estadoFinal,
+            pases_confirmados:   estadoFinal === 'confirmado' ? nombres.length : 0,
+            nombres_confirmados: estadoFinal === 'confirmado' ? nombres : []
           })
         })
-        .catch(function(){})
-        .finally(function(){
+        .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function(resp){
+          if (resp && resp.error) throw new Error(resp.error);
           confirmBtn.disabled = false;
           if (btnText) btnText.textContent = 'Actualizar respuesta';
           if (feedbackEl) {
             feedbackEl.style.display = '';
-            feedbackEl.style.color = rsvpChoice === 'yes' ? '#2a5028' : 'var(--gold-dark)';
-            feedbackEl.textContent = rsvpChoice === 'yes'
+            feedbackEl.style.color = estadoFinal === 'confirmado' ? '#2a5028' : 'var(--gold-dark)';
+            feedbackEl.textContent = estadoFinal === 'confirmado'
               ? '¡Gracias! Tu asistencia ha sido confirmada. ¡Te esperamos con alegría! 🌸'
               : 'Respuesta guardada. ¡Gracias por avisarnos!';
+          }
+        })
+        .catch(function(){
+          confirmBtn.disabled = false;
+          if (btnText) btnText.textContent = 'Confirmar asistencia';
+          if (feedbackEl) {
+            feedbackEl.style.display = '';
+            feedbackEl.style.color = '#B85042';
+            feedbackEl.textContent = 'No pudimos guardar tu respuesta. Revisa tu conexión e intenta de nuevo.';
           }
         });
       });
@@ -4839,7 +4966,7 @@
       '#galeria .title': 'Gallery',
       '#galeria .subtitle': 'Treasured memories · drag to spin',
       '#kids-policy .label': 'Special notice',
-      '#kids-policy .title': 'Attention <span style="font-family:var(--script);font-size:44px;background-image:linear-gradient(100deg,#8A6A28 0%,#C9A04E 32%,#E4CE8E 50%,#C9A04E 68%,#8A6A28 100%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;animation:goldSweep 4s linear infinite;">Parents</span>',
+      '#kids-policy .title': 'Attention <span style="font-family:var(--script);font-size:44px;">Parents</span>',
       '.kids-poem-body': 'We kindly ask all parents to please <strong>keep an eye on your children during the celebration.</strong><br><br>This will help us maintain order and allow the quinceañera to enjoy and carry out her program as planned.<br><br>Thank you for your understanding and for joining us on this special day!',
       '.kids-poem-sig': 'María Libertad & Family',
       '#gifts .title': 'Envelope <span style="font-family:var(--script);color:var(--accent);font-size:42px;">shower</span>',
