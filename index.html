@@ -1394,9 +1394,9 @@
       opacity: .22;
     }
 
-    /* Siluetas dresscode — quitar fondo con blend */
+    /* Siluetas dresscode — fondo ya removido con PIL */
     .dc-figures img {
-      mix-blend-mode: multiply;
+      background: transparent;
     }
 
     /* ══════════════════════════════════════════════════════
@@ -3016,6 +3016,13 @@
     .itin-card::before { content:"";position:absolute;top:0;left:10%;width:80%;height:1px;background:linear-gradient(to right,transparent,rgba(201,160,78,.55),transparent);pointer-events:none; }
     .itin-card::after  { content:"";position:absolute;bottom:0;left:10%;width:80%;height:1px;background:linear-gradient(to right,transparent,rgba(201,160,78,.35),transparent);pointer-events:none; }
     .itin-event.is-active .itin-card { border-color:rgba(201,160,78,.5);background:rgba(255,248,248,.18);box-shadow:0 18px 52px -22px rgba(42,10,30,.25); }
+    .itin-icon-img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      margin-bottom: 14px;
+      filter: drop-shadow(0 4px 12px rgba(201,160,78,.25));
+    }
     .itin-time { font-family:var(--script);font-size:clamp(28px,5vw,40px);color:rgba(240,220,200,.7);letter-spacing:.02em;margin-bottom:6px; }
     .itin-event.is-active .itin-time { color:var(--gold); }
     .itin-name { font-family:var(--sans);font-size:13px;text-transform:uppercase;letter-spacing:.28em;color:rgba(240,220,200,.7);font-weight:500;padding-left:.28em; }
@@ -3026,6 +3033,7 @@
       .itin-wrap{padding-left:clamp(16px,4vw,28px);padding-right:clamp(16px,4vw,28px)}
       .itin-card{max-width:100%;padding:18px 20px 22px}
       .itin-time{font-size:26px}
+      .itin-icon-img{width:100px;height:100px}
     }
 
     /* ── DRESS CODE — figuras + swatches ───────────── */
@@ -3453,6 +3461,7 @@
           <li class="itin-event">
             <span class="itin-marker" aria-hidden="true"></span>
             <div class="itin-card">
+              <img class="itin-icon-img" src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/xv-maria-libertad/icon-iglesia.png" alt="Iglesia" loading="lazy" />
               <div class="itin-time">10:30 AM</div>
               <div class="itin-name">St. Monica Catholic Church</div>
               <div class="itin-desc">María Libertad da gracias a Dios por estos quince años de vida</div>
@@ -3461,6 +3470,7 @@
           <li class="itin-event">
             <span class="itin-marker" aria-hidden="true"></span>
             <div class="itin-card">
+              <img class="itin-icon-img" src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/xv-maria-libertad/icon-princesa.png" alt="Princesa" loading="lazy" />
               <div class="itin-time">5:00 PM</div>
               <div class="itin-name">Star Events</div>
               <div class="itin-desc">Celebración y alegría con los seres más queridos</div>
@@ -3469,6 +3479,7 @@
           <li class="itin-event">
             <span class="itin-marker" aria-hidden="true"></span>
             <div class="itin-card">
+              <img class="itin-icon-img" src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/xv-maria-libertad/icon-final.png" alt="Carroza" loading="lazy" />
               <div class="itin-time">1:00 AM</div>
               <div class="itin-name">Final del evento</div>
               <div class="itin-desc">Una noche mágica llega a su fin, pero los recuerdos quedan para siempre</div>
@@ -3513,7 +3524,7 @@
       </div>
 
       <div class="dc-figures fu" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/xv-maria-libertad/dresscode-siluetas.jpg" alt="Siluetas código de vestimenta — Damas y Caballeros" loading="lazy" style="width:90%;max-width:400px;border-radius:12px;" />
+        <img src="https://bsjoelxktbvlavfoozhk.supabase.co/storage/v1/object/public/fotos-clientes/xv-maria-libertad/dresscode-siluetas.png" alt="Siluetas código de vestimenta — Damas y Caballeros" loading="lazy" style="width:90%;max-width:400px;border-radius:12px;" />
         <div style="display:flex;justify-content:space-around;width:90%;max-width:400px;">
           <div style="text-align:center;">
             <span class="dc-fig-label">Damas</span>
