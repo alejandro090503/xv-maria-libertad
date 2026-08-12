@@ -516,20 +516,6 @@
     }
     .hero-letter.is-space { display: inline-block; width: .25em; }
 
-    /* Corazón pulsante que aparece entre los nombres */
-    .hero-heart {
-      display: inline-block;
-      width: clamp(28px, 8vw, 42px);
-      height: clamp(28px, 8vw, 42px);
-      margin: 0 .1em;
-      vertical-align: middle;
-      color: var(--gold-light);
-      opacity: 0;
-      transform: scale(.3);
-      will-change: transform, opacity;
-      filter: drop-shadow(0 0 12px rgba(228,181,186,.6));
-    }
-
     .hero-amp {
       display: block;
       font-size: 44px;
@@ -3250,7 +3236,6 @@
       .heart-shape path { animation: none !important; }
       .envelope-hint { animation: none !important; }
       .hero-letter { opacity: 1 !important; transform: none !important; filter: none !important; }
-      .hero-heart { opacity: 1 !important; transform: scale(1) !important; }
       .hero-amp, .hero-date, .hero-city, .hero-scroll { opacity: 1 !important; transform: none !important; }
       .itin-card { opacity: 1 !important; transform: none !important; }
       #envelope-screen { display: none !important; }
@@ -3344,11 +3329,6 @@
         <div class="hero-ornament-top" id="hero-orn-top" aria-hidden="true"></div>
         <h1 class="hero-names" id="hero-names" aria-label="María Libertad">
           <span class="hero-line" data-name="María"></span>
-          <span class="hero-heart-wrap" aria-hidden="true">
-            <svg class="hero-heart" id="hero-heart" viewBox="0 0 32 30" fill="currentColor">
-              <path d="M16 8 C19 2 30 2 30 11 C30 20 16 28 16 28 C16 28 2 20 2 11 C2 2 13 2 16 8 Z"/>
-            </svg>
-          </span>
           <span class="hero-line" data-name="Libertad"></span>
         </h1>
         <div class="hero-ornament-bottom" id="hero-orn-bottom" aria-hidden="true"></div>
@@ -4137,11 +4117,6 @@
     tl.to('#hero-orn-top', { opacity: 1, width: 120, duration: 0.8, ease: 'power2.out' }, 0.2);
 
     // 2. Corazón y nombres juntos
-    tl.fromTo('#hero-heart',
-      { opacity: 0, scale: 0.2, rotation: -20 },
-      { opacity: 1, scale: 1, rotation: 0, duration: 1.0, ease: 'back.out(2.2)' },
-      0.6
-    );
     tl.fromTo(letters,
       { opacity: 0, y: -28, rotation: -8, scale: 0.7 },
       {
