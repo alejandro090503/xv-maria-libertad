@@ -176,6 +176,46 @@
     ══════════════════════════════════════════════════════ */
 
     /* Contenedor pantalla completa */
+    /* ── LANGUAGE SELECTOR ────────────────────────── */
+    #lang-screen {
+      position:fixed;inset:0;z-index:10001;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      background:linear-gradient(160deg,#fdf6f0 0%,#fce4ec 50%,#f8d7da 100%);
+      gap:32px;
+      transition:opacity .6s ease;
+    }
+    .lang-title {
+      font-family:var(--script,Georgia,serif);
+      font-size:clamp(28px,7vw,42px);
+      color:#2C1E1E;
+      text-align:center;
+      line-height:1.3;
+    }
+    .lang-sub {
+      font-family:var(--serif,'Cormorant Garamond',serif);
+      font-size:14px;letter-spacing:.18em;text-transform:uppercase;
+      color:rgba(44,30,30,.5);
+    }
+    .lang-buttons {
+      display:flex;gap:20px;flex-wrap:wrap;justify-content:center;
+    }
+    .lang-btn {
+      display:flex;align-items:center;gap:10px;
+      padding:14px 32px;border-radius:40px;
+      border:1.5px solid rgba(201,160,78,.4);
+      background:rgba(255,255,255,.7);
+      backdrop-filter:blur(8px);
+      font-family:var(--serif,'Cormorant Garamond',serif);
+      font-size:17px;letter-spacing:.08em;color:#2C1E1E;
+      cursor:pointer;
+      transition:all .3s ease;
+    }
+    .lang-btn:hover,.lang-btn:active {
+      background:rgba(201,160,78,.15);border-color:#c9a04e;
+      transform:scale(1.04);
+    }
+    .lang-btn .lang-flag { font-size:22px; }
+
     #envelope-screen {
       position: fixed;
       inset: 0;
@@ -3025,8 +3065,17 @@
       display:flex;
       justify-content:center;
       align-items:center;
+      position:relative;
     }
-
+    .itin-left::before {
+      content:'';
+      position:absolute;
+      width:140px;height:140px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.85) 0%, rgba(255,255,255,.5) 40%, rgba(255,255,255,0) 70%);
+      z-index:0;
+      pointer-events:none;
+    }
     .itin-dot {
       width:20px;
       height:20px;
@@ -3042,30 +3091,45 @@
       display:flex;
       flex-direction:column;
       padding-left:16px;
+      position:relative;
     }
+    .itin-right::before {
+      content:'';
+      position:absolute;
+      inset:-10px -14px;
+      border-radius:18px;
+      background:radial-gradient(ellipse at center, rgba(255,255,255,.78) 0%, rgba(255,255,255,.4) 50%, rgba(255,255,255,0) 80%);
+      z-index:0;
+      pointer-events:none;
+    }
+    .itin-right > * { position:relative; z-index:1; }
 
     .itin-icon-img {
       width:110px;
       height:110px;
       object-fit:contain;
       filter:drop-shadow(0 4px 14px rgba(139,99,102,.2));
+      position:relative;
+      z-index:1;
     }
 
     .itin-time {
       font-family:var(--script);
       font-size:clamp(26px,5vw,36px);
-      color:var(--accent);
+      color:#7a3040;
       letter-spacing:.02em;
       margin-bottom:2px;
+      text-shadow:0 0 8px rgba(255,255,255,.6);
     }
     .itin-name {
       font-family:var(--sans);
-      font-size:12px;
+      font-size:13px;
       text-transform:uppercase;
       letter-spacing:.22em;
-      color:var(--text);
-      font-weight:600;
+      color:#2C1E1E;
+      font-weight:700;
       padding-left:.22em;
+      text-shadow:0 0 6px rgba(255,255,255,.7);
     }
     .itin-desc {
       margin-top:6px;
@@ -3205,6 +3269,18 @@
   <!-- ════════════════════════════════════
        ENVELOPE OPENING SCREEN — IMAGEN + VIDEO IA
   ════════════════════════════════════ -->
+  <!-- ════════════════════════════════════
+       LANGUAGE SELECTOR — antes del sobre
+  ════════════════════════════════════ -->
+  <div id="lang-screen">
+    <p class="lang-sub">Select your language</p>
+    <p class="lang-title">Bienvenidos<br><span style="font-size:.65em;font-family:var(--serif);opacity:.7;">Welcome</span></p>
+    <div class="lang-buttons">
+      <button class="lang-btn" data-lang="es"><span class="lang-flag">&#127474;&#127485;</span> Español</button>
+      <button class="lang-btn" data-lang="en"><span class="lang-flag">&#127482;&#127480;</span> English</button>
+    </div>
+  </div>
+
   <div id="envelope-screen" role="button" aria-label="Toca para abrir tu invitación">
 
     <!-- Imagen estática del sobre (IA generada) -->
@@ -4711,6 +4787,194 @@
     btn.classList.add('copied');
     setTimeout(function(){ btn.innerHTML = svgCopy; btn.classList.remove('copied'); }, 1800);
   }
+  </script>
+
+  <script>
+  (function(){
+    var langScreen = document.getElementById('lang-screen');
+    var envelopeScreen = document.getElementById('envelope-screen');
+    var chosenLang = 'es';
+
+    var EN = {
+      '#env-hint': 'Tap to open',
+      '#hero-date': 'September 26 · 2026',
+      '.guest-card-label': 'This invitation is for',
+      '#hero-scroll span': 'Scroll',
+      '.cd-lbl': ['days','hours','min','sec'],
+      '#versiculo [style*="Salmos"]': 'Psalms 37:4',
+      '#versiculo [style*="italic"]': '“Delight yourself in the Lord,<br>and He will give you the desires of your heart.”',
+      '#versiculo [style*="display"]': 'María Libertad',
+      '#cuenta .title': 'The big day',
+      '#cuenta .subtitle': 'Time flies when you’re expecting something beautiful',
+      '#ubicacion .title': 'Where we’ll celebrate',
+      '#ubicacion .subtitle': 'We await you with open arms',
+      '.loc-tab[data-panel="loc-panel-ceremonia"]': 'Ceremony',
+      '.loc-tab[data-panel="loc-panel-recepcion"]': 'Reception',
+      '#loc-panel-ceremonia .loc-panel-script': 'Quinceañera Mass',
+      '#loc-panel-ceremonia .loc-panel-name': 'Church',
+      '#loc-panel-ceremonia .loc-panel-time-lbl': 'AM',
+      '#loc-panel-recepcion .loc-panel-script': 'Reception',
+      '#loc-panel-recepcion .loc-panel-name': 'Banquet Hall',
+      '#loc-panel-recepcion .loc-panel-time-lbl': 'PM',
+      '.btn-maps': 'View on Maps',
+      '#calendar .label': 'Don’t forget',
+      '#calendar .title': 'Save the date',
+      '.cal-month': 'September · 2026',
+      '.cal-weekday': 'Saturday',
+      '.btn-cal': 'Add to Google Calendar',
+      '#itinerario .title': 'Itinerary',
+      '.itin-event:nth-child(1) .itin-name': 'Mass',
+      '.itin-event:nth-child(2) .itin-name': 'Reception',
+      '.itin-event:nth-child(3) .itin-name': 'End of event',
+      '.itin-event:nth-child(3) .itin-desc': 'A magical night comes to an end',
+      '#dresscode .title': 'Formal',
+      '.dc-fig-label:first-of-type': 'Ladies',
+      '.dc-fig-sub:first-of-type': 'formal gown',
+      '.dc-fig-label:last-of-type': 'Gentlemen',
+      '.dc-fig-sub:last-of-type': 'formal suit',
+      '.dc-avoid': 'Please avoid these colors',
+      '.dc-swatch-name': ['Gray tones','Pink tones'],
+      '#galeria .label': 'Her moments',
+      '#galeria .title': 'Gallery',
+      '#galeria .subtitle': 'Treasured memories · drag to spin',
+      '#kids-policy .label': 'Special notice',
+      '#kids-policy .title': 'Attention <span style="font-family:var(--script);font-size:44px;background-image:linear-gradient(100deg,#8A6A28 0%,#C9A04E 32%,#E4CE8E 50%,#C9A04E 68%,#8A6A28 100%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;animation:goldSweep 4s linear infinite;">Parents</span>',
+      '.kids-poem-body': 'We kindly ask all parents to please <strong>keep an eye on your children during the celebration.</strong><br><br>This will help us maintain order and allow the quinceañera to enjoy and carry out her program as planned.<br><br>Thank you for your understanding and for joining us on this special day!',
+      '.kids-poem-sig': 'María Libertad & Family',
+      '#gifts .title': 'Envelope <span style="font-family:var(--script);color:var(--accent);font-size:42px;">shower</span>',
+      '.env-title': 'Envelope shower',
+      '.env-desc': 'Your presence is the greatest gift.<br>If you wish to give something, there will be a special<br>box to receive your envelope with love.',
+      '.env-tap-hint': 'Tap the envelope to open it',
+      '.rsvp-title': 'Confirm your attendance',
+      '.rsvp-text': 'Your presence is the best gift. Please confirm before <strong>September 10, 2026</strong>.',
+      '.rsvp-pases-label': 'Assigned seats',
+      '#rsvp-btn-text': 'Confirm attendance',
+      '.rsvp-deadline': 'Deadline · September 10, 2026',
+      '.credit-label': 'Invitation designed by',
+      '.ft-names': 'María Libertad',
+      '.ft-date': 'September 26 · 2026 · Indianapolis'
+    };
+
+    var originals = {};
+
+    function storeOriginals() {
+      Object.keys(EN).forEach(function(sel) {
+        if (sel === '.cd-lbl' || sel === '.dc-swatch-name') {
+          var els = document.querySelectorAll(sel);
+          originals[sel] = [];
+          els.forEach(function(el) { originals[sel].push(el.innerHTML); });
+        } else {
+          var el = document.querySelector(sel);
+          if (el) originals[sel] = el.innerHTML;
+        }
+      });
+    }
+
+    function applyLang(lang) {
+      chosenLang = lang;
+      document.documentElement.setAttribute('data-lang', lang);
+      if (lang === 'en') {
+        Object.keys(EN).forEach(function(sel) {
+          if (sel === '.cd-lbl' || sel === '.dc-swatch-name') {
+            var els = document.querySelectorAll(sel);
+            els.forEach(function(el, i) {
+              if (EN[sel][i]) el.innerHTML = EN[sel][i];
+            });
+          } else {
+            var el = document.querySelector(sel);
+            if (el) el.innerHTML = EN[sel];
+          }
+        });
+        // Fix tab buttons that have SVGs
+        fixTabBtns('en');
+      } else {
+        Object.keys(originals).forEach(function(sel) {
+          if (sel === '.cd-lbl' || sel === '.dc-swatch-name') {
+            var els = document.querySelectorAll(sel);
+            els.forEach(function(el, i) {
+              if (originals[sel][i]) el.innerHTML = originals[sel][i];
+            });
+          } else {
+            var el = document.querySelector(sel);
+            if (el && originals[sel]) el.innerHTML = originals[sel];
+          }
+        });
+        fixTabBtns('es');
+      }
+      // Fix versículo invitation paragraph
+      var invP = document.querySelector('#versiculo [style*="display:block"]');
+      if (!invP) {
+        var ps = document.querySelectorAll('#versiculo p');
+        ps.forEach(function(p) {
+          if (p.style.fontWeight === '500' || p.textContent.indexOf('alegr') > -1 || p.textContent.indexOf('joyfully') > -1) {
+            if (lang === 'en') {
+              p.innerHTML = 'With great joy,<br><strong style="font-family:var(--serif);font-weight:600;">Jorge Valdez & María Flores</strong><br>have the honor of inviting you to celebrate<br>the Quinceañera of their daughter<br><span style="font-family:var(--script,Georgia,serif);font-size:36px;display:block;margin-top:10px;background-image:linear-gradient(100deg,#8A6A28 0%,#A8822F 10%,#C9A04E 20%,#E4CE8E 32%,#C9A04E 46%,#A8822F 58%,#C9A04E 70%,#E4CE8E 80%,#A8822F 90%,#8A6A28 100%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:goldSweep 4s linear infinite;filter:drop-shadow(0 0 10px rgba(201,160,78,.6));">María Libertad</span>';
+            } else if (originals['_invP']) {
+              p.innerHTML = originals['_invP'];
+            }
+          }
+        });
+      }
+    }
+
+    function fixTabBtns(lang) {
+      var cerBtn = document.querySelector('.loc-tab[data-panel="loc-panel-ceremonia"]');
+      var recBtn = document.querySelector('.loc-tab[data-panel="loc-panel-recepcion"]');
+      if (cerBtn) {
+        var svg1 = cerBtn.querySelector('svg');
+        var svgHtml1 = svg1 ? svg1.outerHTML : '';
+        cerBtn.innerHTML = svgHtml1 + '\n            ' + (lang === 'en' ? 'Ceremony' : 'Ceremonia');
+      }
+      if (recBtn) {
+        var svg2 = recBtn.querySelector('svg');
+        var svgHtml2 = svg2 ? svg2.outerHTML : '';
+        recBtn.innerHTML = svgHtml2 + '\n            ' + (lang === 'en' ? 'Reception' : 'Recepción');
+      }
+      // Fix maps buttons
+      var mapsLinks = document.querySelectorAll('.btn-maps');
+      mapsLinks.forEach(function(a) {
+        var svg = a.querySelector('svg');
+        var svgH = svg ? svg.outerHTML : '';
+        a.innerHTML = svgH + '\n              ' + (lang === 'en' ? 'View on Maps' : 'Ver en Maps');
+      });
+      // Fix calendar button
+      var calBtn = document.querySelector('.btn-cal');
+      if (calBtn) {
+        var svgC = calBtn.querySelector('svg');
+        var svgHC = svgC ? svgC.outerHTML : '';
+        calBtn.innerHTML = svgHC + '\n          ' + (lang === 'en' ? 'Add to Google Calendar' : 'Agregar a Google Calendar');
+      }
+      // Fix deadline with icon
+      var dl = document.querySelector('.rsvp-deadline');
+      if (dl) {
+        var svgD = dl.querySelector('svg');
+        var svgHD = svgD ? svgD.outerHTML : '';
+        dl.innerHTML = svgHD + '\n              ' + (lang === 'en' ? 'Deadline · September 10, 2026' : 'Fecha límite · 10 septiembre 2026');
+      }
+    }
+
+    // Store originals once DOM is ready
+    storeOriginals();
+    // Also store the invitation paragraph
+    var invPs = document.querySelectorAll('#versiculo p');
+    invPs.forEach(function(p) {
+      if (p.style.fontWeight === '500' || p.textContent.indexOf('alegr') > -1) {
+        originals['_invP'] = p.innerHTML;
+      }
+    });
+
+    // Language button handlers
+    langScreen.querySelectorAll('.lang-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var lang = btn.getAttribute('data-lang');
+        applyLang(lang);
+        langScreen.style.opacity = '0';
+        setTimeout(function() {
+          langScreen.style.display = 'none';
+        }, 600);
+      });
+    });
+  })();
   </script>
 
 </body>
