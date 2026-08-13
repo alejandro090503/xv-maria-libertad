@@ -3720,7 +3720,7 @@
       <div class="kids-poem-card-v2 fu">
         <p class="kids-poem-body" style="font-size:18px;line-height:1.65;font-weight:500;">
           Queremos pedirles de manera muy especial a todos los padres que,
-          por favor, <strong>estén pendientes de sus niños durante la ceremonia de inicio de la celebración.</strong><br><br>
+          por favor, <strong>estén pendientes de sus niños durante la ceremonia de inicio en la celebración.</strong><br><br>
           Esto nos ayudará a mantener el orden y permitirá que la quinceañera
           pueda disfrutar y llevar a cabo su programa tal como está preparado.<br><br>
           ¡Gracias por su comprensión y por acompañarnos en este día tan especial!
@@ -4706,13 +4706,13 @@
         var bY = document.createElement('button');
         bY.type = 'button';
         bY.className = 'rsvp-mini-btn' + (choice === 'yes' ? ' rsvp-mini-yes-on' : '');
-        bY.textContent = 'Asistiré';
+        bY.textContent = chosenLang === 'en' ? 'I will attend' : 'Asistiré';
         bY.disabled = frozen;
         bY.addEventListener('click', function(){ if(frozen) return; asignadosChoices[idx] = 'yes'; renderAsignados(); });
         var bN = document.createElement('button');
         bN.type = 'button';
         bN.className = 'rsvp-mini-btn' + (choice === 'no' ? ' rsvp-mini-no-on' : '');
-        bN.textContent = 'No asistiré';
+        bN.textContent = chosenLang === 'en' ? 'I won\'t attend' : 'No asistiré';
         bN.disabled = frozen;
         bN.addEventListener('click', function(){ if(frozen) return; asignadosChoices[idx] = 'no'; renderAsignados(); });
         tog.appendChild(bY); tog.appendChild(bN);
@@ -4728,7 +4728,7 @@
         var inp = document.createElement('input');
         inp.className    = 'rsvp-input';
         inp.type         = 'text';
-        inp.placeholder  = 'Escribe tu nombre completo';
+        inp.placeholder  = chosenLang === 'en' ? 'Enter your full name' : 'Escribe tu nombre completo';
         inp.autocomplete = 'off';
         fieldsEl.appendChild(inp);
       }
@@ -4774,14 +4774,14 @@
               nombresAsignados.forEach(function(nm, idx){
                 asignadosChoices[idx] = (inv.estado === 'declino') ? 'no' : (confLower.indexOf(nm.toLowerCase().trim()) >= 0 ? 'yes' : 'no');
               });
-              if (btnText) btnText.textContent = 'Actualizar respuesta';
+              if (btnText) btnText.textContent = chosenLang === 'en' ? 'Update response' : 'Actualizar respuesta';
             }
             renderAsignados();
             return;
           }
           if (inv.estado === 'confirmado') {
             selectRsvp('yes');
-            if (btnText) btnText.textContent = 'Actualizar respuesta';
+            if (btnText) btnText.textContent = chosenLang === 'en' ? 'Update response' : 'Actualizar respuesta';
             var prev = inv.nombres_confirmados || [];
             if (prev.length > 0 && fieldsEl) {
               var inputs = fieldsEl.querySelectorAll('input');
@@ -4789,7 +4789,7 @@
             }
           } else if (inv.estado === 'declino') {
             selectRsvp('no');
-            if (btnText) btnText.textContent = 'Actualizar respuesta';
+            if (btnText) btnText.textContent = chosenLang === 'en' ? 'Update response' : 'Actualizar respuesta';
           }
         }).catch(function(){});
     }
@@ -4813,14 +4813,14 @@
         if (modoAsignados) {
           var faltan = nombresAsignados.filter(function(_, i){ return !asignadosChoices[i]; });
           if (faltan.length > 0) {
-            if (feedbackEl) { feedbackEl.textContent = 'Por favor responde por cada invitado (' + faltan.length + ' pendiente' + (faltan.length === 1 ? '' : 's') + ').'; feedbackEl.style.display = ''; feedbackEl.style.color = 'var(--gold-dark)'; }
+            if (feedbackEl) { feedbackEl.textContent = chosenLang === 'en' ? 'Please respond for each guest (' + faltan.length + ' pending).' : 'Por favor responde por cada invitado (' + faltan.length + ' pendiente' + (faltan.length === 1 ? '' : 's') + ').'; feedbackEl.style.display = ''; feedbackEl.style.color = 'var(--gold-dark)'; }
             return;
           }
           nombres = nombresAsignados.filter(function(_, i){ return asignadosChoices[i] === 'yes'; });
           estadoFinal = nombres.length > 0 ? 'confirmado' : 'declino';
         } else {
           if (!rsvpChoice) {
-            if (feedbackEl) { feedbackEl.textContent = 'Por favor selecciona si asistirás o no.'; feedbackEl.style.display = ''; feedbackEl.style.color = 'var(--gold-dark)'; }
+            if (feedbackEl) { feedbackEl.textContent = chosenLang === 'en' ? 'Please select whether you will attend or not.' : 'Por favor selecciona si asistirás o no.'; feedbackEl.style.display = ''; feedbackEl.style.color = 'var(--gold-dark)'; }
             return;
           }
           if (rsvpChoice === 'yes' && fieldsEl) {
@@ -4830,11 +4830,11 @@
         }
         var nombre = urlPara || (nombres[0] || '');
         if (!nombre) {
-          if (feedbackEl) { feedbackEl.textContent = 'Por favor ingresa tu nombre.'; feedbackEl.style.display = ''; feedbackEl.style.color = 'var(--gold-dark)'; }
+          if (feedbackEl) { feedbackEl.textContent = chosenLang === 'en' ? 'Please enter your name.' : 'Por favor ingresa tu nombre.'; feedbackEl.style.display = ''; feedbackEl.style.color = 'var(--gold-dark)'; }
           return;
         }
         confirmBtn.disabled = true;
-        if (btnText) btnText.textContent = 'Enviando…';
+        if (btnText) btnText.textContent = chosenLang === 'en' ? 'Sending…' : 'Enviando…';
 
         fetch(PANEL_URL, {
           method: 'POST',
@@ -4851,22 +4851,28 @@
         .then(function(resp){
           if (resp && resp.error) throw new Error(resp.error);
           confirmBtn.disabled = false;
-          if (btnText) btnText.textContent = 'Actualizar respuesta';
+          if (btnText) btnText.textContent = chosenLang === 'en' ? 'Update response' : 'Actualizar respuesta';
           if (feedbackEl) {
             feedbackEl.style.display = '';
             feedbackEl.style.color = estadoFinal === 'confirmado' ? '#2a5028' : 'var(--gold-dark)';
-            feedbackEl.textContent = estadoFinal === 'confirmado'
-              ? '¡Gracias! Tu asistencia ha sido confirmada. ¡Te esperamos con alegría! 🌸'
-              : 'Respuesta guardada. ¡Gracias por avisarnos!';
+            if (chosenLang === 'en') {
+              feedbackEl.textContent = estadoFinal === 'confirmado'
+                ? 'Thank you! Your attendance has been confirmed. We look forward to seeing you! 🌸'
+                : 'Response saved. Thank you for letting us know!';
+            } else {
+              feedbackEl.textContent = estadoFinal === 'confirmado'
+                ? '¡Gracias! Tu asistencia ha sido confirmada. ¡Te esperamos con alegría! 🌸'
+                : 'Respuesta guardada. ¡Gracias por avisarnos!';
+            }
           }
         })
         .catch(function(){
           confirmBtn.disabled = false;
-          if (btnText) btnText.textContent = 'Confirmar asistencia';
+          if (btnText) btnText.textContent = chosenLang === 'en' ? 'Confirm attendance' : 'Confirmar asistencia';
           if (feedbackEl) {
             feedbackEl.style.display = '';
             feedbackEl.style.color = '#B85042';
-            feedbackEl.textContent = 'No pudimos guardar tu respuesta. Revisa tu conexión e intenta de nuevo.';
+            feedbackEl.textContent = chosenLang === 'en' ? 'We couldn\'t save your response. Check your connection and try again.' : 'No pudimos guardar tu respuesta. Revisa tu conexión e intenta de nuevo.';
           }
         });
       });
@@ -4945,7 +4951,7 @@
       '#galeria .subtitle': 'Treasured memories · drag to spin',
       '#kids-policy .label': 'Special notice',
       '#kids-policy .title': 'Attention <span style="font-family:var(--script);font-size:44px;">Parents</span>',
-      '.kids-poem-body': 'We kindly ask all parents to please <strong>keep an eye on your children during the opening ceremony of the celebration.</strong><br><br>This will help us maintain order and allow the quinceañera to enjoy and carry out her program as planned.<br><br>Thank you for your understanding and for joining us on this special day!',
+      '.kids-poem-body': 'We kindly ask all parents to please <strong>keep an eye on your children during the opening ceremony in the celebration.</strong><br><br>This will help us maintain order and allow the quinceañera to enjoy and carry out her program as planned.<br><br>Thank you for your understanding and for joining us on this special day!',
       '.kids-poem-sig': 'María Libertad & Family',
       '#gifts .title': 'Envelope <span style="font-family:var(--script);color:var(--accent);font-size:42px;">shower</span>',
       '.env-title': 'Envelope shower',
@@ -4955,6 +4961,8 @@
       '.rsvp-text': 'Your presence is the best gift. Please confirm before <strong>September 10, 2026</strong>.',
       '.rsvp-pases-label': 'Assigned seats',
       '#rsvp-btn-text': 'Confirm attendance',
+      '#btnYes': 'I will attend',
+      '#btnNo': 'I won\'t be able to attend',
       '.rsvp-deadline': 'Deadline · September 10, 2026',
       '.credit-label': 'Invitation designed by',
       '.ft-names': 'María Libertad',
